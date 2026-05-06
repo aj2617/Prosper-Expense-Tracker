@@ -1,8 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { DEMO_BUDGETS, DEMO_TRANSACTIONS, CATEGORIES, formatCurrency } from "@/lib/demo-data";
+import { DEFAULT_BUDGETS, CATEGORIES, formatCurrency } from "@/lib/demo-data";
 import { format } from "date-fns";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
+import { useTransactions } from "@/hooks/useTransactions";
+import { useLocalStorageState } from "@/hooks/useLocalStorageState";
 
 export const Route = createFileRoute("/budgets")({
   component: BudgetsPage,
@@ -10,11 +12,12 @@ export const Route = createFileRoute("/budgets")({
 
 function BudgetsPage() {
   const currentMonth = format(new Date(), "yyyy-MM");
-  const [budgets, setBudgets] = useState(DEMO_BUDGETS);
+  const { transactions } = useTransactions();
+  const [budgets, setBudgets] = useLocalStorageState("prosper.budgets.v1", DEFAULT_BUDGETS);
   const [editingBudgetId, setEditingBudgetId] = useState<string | null>(null);
   const [editingAmount, setEditingAmount] = useState("");
 
-  const categoryExpenses = DEMO_TRANSACTIONS
+  const categoryExpenses = transactions
     .filter((t) => t.type === "expense" && t.date.startsWith(currentMonth))
     .reduce((acc, t) => {
       acc[t.categoryId] = (acc[t.categoryId] || 0) + t.amount;

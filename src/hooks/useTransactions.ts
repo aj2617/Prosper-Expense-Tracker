@@ -1,8 +1,9 @@
-import { useState, useCallback } from "react";
-import { DEMO_TRANSACTIONS, type Transaction } from "@/lib/demo-data";
+import { useCallback } from "react";
+import { DEFAULT_TRANSACTIONS, type Transaction } from "@/lib/demo-data";
+import { useLocalStorageState } from "@/hooks/useLocalStorageState";
 
 export function useTransactions() {
-  const [transactions, setTransactions] = useState<Transaction[]>(() => [...DEMO_TRANSACTIONS]);
+  const [transactions, setTransactions] = useLocalStorageState<Transaction[]>("prosper.transactions.v1", DEFAULT_TRANSACTIONS);
 
   const addTransaction = useCallback((t: Omit<Transaction, "id">) => {
     const id = crypto.randomUUID();

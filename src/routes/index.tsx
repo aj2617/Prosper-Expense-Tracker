@@ -20,12 +20,13 @@ import {
   Cell,
 } from "recharts";
 import {
-  DEMO_BUDGETS,
-  DEMO_SAVINGS,
   CATEGORIES,
+  DEFAULT_BUDGETS,
+  DEFAULT_SAVINGS,
   formatCurrency,
 } from "@/lib/demo-data";
 import { useTransactions } from "@/hooks/useTransactions";
+import { useLocalStorageState } from "@/hooks/useLocalStorageState";
 
 export const Route = createFileRoute("/")({
   component: DashboardPage,
@@ -68,6 +69,8 @@ function StatCard({
 
 function DashboardPage() {
   const { transactions } = useTransactions();
+  const [budgets] = useLocalStorageState("prosper.budgets.v1", DEFAULT_BUDGETS);
+  const [goals] = useLocalStorageState("prosper.savings.v1", DEFAULT_SAVINGS);
   const currentMonth = format(new Date(), "yyyy-MM");
 
   const expenses = transactions
@@ -79,7 +82,7 @@ function DashboardPage() {
     .reduce((s, t) => s + t.amount, 0);
 
   const balance = income - expenses;
-  const totalBudget = DEMO_BUDGETS.find((b) => b.categoryId === "all")?.amount || 0;
+  const totalBudget = budgets.find((b) => b.categoryId === "all")?.amount || 0;
 
   const categoryExpenses = transactions
     .filter((t) => t.type === "expense" && t.date.startsWith(currentMonth))
@@ -88,7 +91,7 @@ function DashboardPage() {
       return acc;
     }, {} as Record<string, number>);
 
-  const budgetAlerts = DEMO_BUDGETS.filter((b) => b.period === "monthly")
+  const budgetAlerts = budgets.filter((b) => b.period === "monthly")
     .map((b) => {
       const spent = b.categoryId === "all" ? expenses : categoryExpenses[b.categoryId] || 0;
       const name = b.categoryId === "all" ? "Overall" : CATEGORIES[b.categoryId]?.name || b.categoryId;
@@ -173,7 +176,7 @@ function DashboardPage() {
           )}
         </StatCard>
         <StatCard title="Income" value={formatCurrency(income)} icon={ArrowUpRight} iconBg="bg-accent" iconColor="text-primary" />
-        <StatCard title="Goals" value={String(DEMO_SAVINGS.length)} icon={TrendingUp} iconBg="bg-warning/10" iconColor="text-warning-foreground" />
+        <StatCard title="Goals" value={String(goals.length)} icon={TrendingUp} iconBg="bg-warning/10" iconColor="text-warning-foreground" />
       </div>
 
       {/* Charts */}

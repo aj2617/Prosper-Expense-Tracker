@@ -85,10 +85,10 @@ export function AppSidebar() {
         <div className={`px-4 pb-4 ${collapsed ? "hidden" : ""}`}>
           <div className="rounded-2xl bg-accent/60 p-4">
             <p className="text-xs font-semibold text-accent-foreground">
-              Demo Mode
+              Your Data
             </p>
             <p className="mt-1 text-[11px] text-muted-foreground leading-relaxed">
-              Using sample data. Connect a backend to persist your finances.
+              Data is saved locally on this device.
             </p>
           </div>
         </div>

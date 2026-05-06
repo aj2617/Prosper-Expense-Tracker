@@ -14,16 +14,18 @@ import {
   LineChart,
   Line,
 } from "recharts";
-import { DEMO_TRANSACTIONS, CATEGORIES, formatCurrency } from "@/lib/demo-data";
+import { CATEGORIES, formatCurrency } from "@/lib/demo-data";
+import { useTransactions } from "@/hooks/useTransactions";
 
 export const Route = createFileRoute("/reports")({
   component: ReportsPage,
 });
 
 function ReportsPage() {
+  const { transactions } = useTransactions();
   const currentMonth = format(new Date(), "yyyy-MM");
 
-  const categoryExpenses = DEMO_TRANSACTIONS
+  const categoryExpenses = transactions
     .filter((t) => t.type === "expense" && t.date.startsWith(currentMonth))
     .reduce((acc, t) => {
       acc[t.categoryId] = (acc[t.categoryId] || 0) + t.amount;
@@ -43,7 +45,7 @@ function ReportsPage() {
   const totalExpense = pieData.reduce((s, d) => s + d.value, 0);
 
   // Daily spending trend
-  const dailyData = DEMO_TRANSACTIONS
+  const dailyData = transactions
     .filter((t) => t.type === "expense" && t.date.startsWith(currentMonth))
     .reduce((acc, t) => {
       const day = t.date.slice(8, 10);

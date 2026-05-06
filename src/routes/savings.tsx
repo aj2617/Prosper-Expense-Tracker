@@ -1,21 +1,22 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { DEMO_SAVINGS, formatCurrency } from "@/lib/demo-data";
+import { DEFAULT_SAVINGS, formatCurrency, type SavingsGoal } from "@/lib/demo-data";
 import { Pencil, Plus, Target, Trash2 } from "lucide-react";
 import { useState } from "react";
+import { useLocalStorageState } from "@/hooks/useLocalStorageState";
 
 export const Route = createFileRoute("/savings")({
   component: SavingsPage,
 });
 
 function SavingsPage() {
-  const [goals, setGoals] = useState(DEMO_SAVINGS);
+  const [goals, setGoals] = useLocalStorageState<SavingsGoal[]>("prosper.savings.v1", DEFAULT_SAVINGS);
   const [editingGoalId, setEditingGoalId] = useState<string | null>(null);
   const [editingName, setEditingName] = useState("");
   const [editingTargetAmount, setEditingTargetAmount] = useState("");
   const [editingCurrentAmount, setEditingCurrentAmount] = useState("");
   const [editingDeadline, setEditingDeadline] = useState("");
 
-  const startEdit = (goal: (typeof DEMO_SAVINGS)[number]) => {
+  const startEdit = (goal: SavingsGoal) => {
     setEditingGoalId(goal.id);
     setEditingName(goal.name);
     setEditingTargetAmount(String(goal.targetAmount));
