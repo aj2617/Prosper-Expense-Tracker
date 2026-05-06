@@ -49,6 +49,20 @@ function BudgetsPage() {
     if (editingBudgetId === id) cancelEdit();
   };
 
+  const createBudget = () => {
+    const id = crypto.randomUUID();
+    const newBudget = {
+      id,
+      categoryId: "all",
+      amount: 0,
+      period: "monthly" as const,
+    };
+
+    setBudgets((prev) => [newBudget, ...prev]);
+    setEditingBudgetId(id);
+    setEditingAmount("0");
+  };
+
   return (
     <div className="animate-fade-in space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -56,7 +70,11 @@ function BudgetsPage() {
           <h1 className="text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">Budgets</h1>
           <p className="mt-1 text-sm text-muted-foreground">Set spending limits for your categories</p>
         </div>
-        <button className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition hover:bg-primary/90">
+        <button
+          type="button"
+          onClick={createBudget}
+          className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition hover:bg-primary/90"
+        >
           <Plus className="h-4 w-4" /> Add Budget
         </button>
       </div>
