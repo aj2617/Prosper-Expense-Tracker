@@ -65,6 +65,28 @@ function SavingsPage() {
     if (editingGoalId === id) cancelEdit();
   };
 
+  const createGoal = () => {
+    const id = crypto.randomUUID();
+    const today = new Date().toISOString().split("T")[0] ?? "";
+
+    setGoals((prev) => [
+      {
+        id,
+        name: "New Goal",
+        targetAmount: 0,
+        currentAmount: 0,
+        deadline: today,
+      },
+      ...prev,
+    ]);
+
+    setEditingGoalId(id);
+    setEditingName("New Goal");
+    setEditingTargetAmount("0");
+    setEditingCurrentAmount("0");
+    setEditingDeadline(today);
+  };
+
   return (
     <div className="animate-fade-in space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -72,7 +94,11 @@ function SavingsPage() {
           <h1 className="text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">Savings Goals</h1>
           <p className="mt-1 text-sm text-muted-foreground">Track your progress toward financial goals</p>
         </div>
-        <button className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition hover:bg-primary/90">
+        <button
+          type="button"
+          onClick={createGoal}
+          className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition hover:bg-primary/90"
+        >
           <Plus className="h-4 w-4" /> New Goal
         </button>
       </div>
